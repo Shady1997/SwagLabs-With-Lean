@@ -1,0 +1,1 @@
+java -Dwebdriver.chrome.driver=C:\drivers\chromedriver.exe -jar selenium-server-standalone-3.5.3.jar -role node -hub http://localhost:4444/grid/register -browser browserName=chrome,version=66.0,maxInstances=5,seleniumProtocol=WebDriver -port 4445
