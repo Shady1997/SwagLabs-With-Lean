@@ -7,7 +7,8 @@ on:
   pull_request:
     branches:
       - master
-
+permissions:
+  contents: write  # Ensure the GITHUB_TOKEN has write permissions to the repository
 jobs:
   cross-browser-test:
     runs-on: macos-latest
@@ -17,7 +18,13 @@ jobs:
         browser: [ chrome, firefox, edge, safari ]
 
     steps:
-      - uses: actions/checkout@v4
+#      - uses: actions/checkout@v4
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history to avoid shallow clone issues
+          submodules: true  # If using submodules, fetch them
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -71,21 +78,17 @@ jobs:
 
           # Add only the HTML reports if necessary
           git add index.html
-          git commit -m "Update Selenium test report" || echo "No changes to commit"
-
-          # Stash any local changes before pulling
-          git stash
+          git commit -m "Update Selenium test report"
 
           # Set the default pull behavior to rebase
           git config pull.rebase true
 
           # Pull with rebase and set conflict resolution strategy
-          git pull --rebase=merges origin master
+          git pull --rebase=merges origin master  
 
-          # Apply stashed changes back (if any)
-          git stash pop || echo "No stashed changes to apply"
-
-          # Push the changes to the remote repository
+          # commit changes of index file
+          # git add .
+          # git commit -m "update index file"
           git push origin master
 
         env:
