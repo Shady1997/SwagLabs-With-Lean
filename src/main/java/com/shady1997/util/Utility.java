@@ -4,8 +4,8 @@ package com.shady1997.util;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -231,9 +231,12 @@ public class Utility {
     }
     // TODO: generate allure report after test finish as single html file
     public static void executeCommand(String command) throws IOException, InterruptedException {
+        // print command
+        System.out.println(command);
+
         // Set default command if none is provided
         if (command == null || command.isEmpty()) {
-            command = "allure generate --single-file target/allure-results";
+            command = "allure generate --clean --single-file target/allure-results";
         }
 
         // Create a ProcessBuilder instance
@@ -268,4 +271,25 @@ public class Utility {
         int exitCode = process.waitFor();
         System.out.println("Command executed with exit code: " + exitCode);
     }
+
+    public static void copyFileToSrc() {
+        // Define the source file path (file in child folder)
+        Path sourcePath = Paths.get(System.getProperty("user.dir") + "/allure-report/index.html");
+
+        // Define the destination file path (to the root of the project directory)
+        Path destinationPath = Paths.get(System.getProperty("user.dir") + "/index.html");
+
+        try (FileChannel sourceChannel = FileChannel.open(sourcePath, StandardOpenOption.READ);
+             FileChannel destChannel = FileChannel.open(destinationPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+
+            // Transfer the file from source to destination
+            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+
+            System.out.println("File copied successfully to: " + destinationPath);
+
+        } catch (IOException e) {
+            System.err.println("Error copying file: " + e.getMessage());
+        }
+    }
+
 }

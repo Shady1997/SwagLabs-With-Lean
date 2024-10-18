@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        browser: [chrome, firefox, edge, safari]
+        browser: [ chrome, firefox, edge, safari ]
 
     steps:
       - uses: actions/checkout@v4
@@ -55,6 +55,37 @@ jobs:
           else
             mvn -B -q test -Pweb-execution -Dsuite=local -Dtarget=local -Dheadless=true -Dbrowser=${{ matrix.browser }}
           fi
+
+      # Step 6: Upload Test Results (if generated)
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3   # Updated to v3
+        with:
+          name: test-results
+          path: target/surefire-reports  # Change the path if your reports are generated elsewhere
+
+      # Step 7: Commit and push HTML report (if reports are generated in HTML)
+      - name: Commit and push HTML report
+        run: |
+          git config --global user.name "Shady1997"
+          git config --global user.email "shadyahmed9719@gmail.com"
+
+          # Add only the HTML reports if necessary
+          git add index.html
+          git commit -m "Update Selenium test report"
+          
+          # Set the default pull behavior to rebase
+          git config pull.rebase true
+          
+          # Pull with rebase and set conflict resolution strategy
+          git pull --rebase=merges origin master  
+          
+          # commit changes of index file
+          # git add .
+          # git commit -m "update index file"
+          git push origin master
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #name: Build and Test
 #on:

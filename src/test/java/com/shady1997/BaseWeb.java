@@ -9,8 +9,7 @@ import org.testng.annotations.*;
 import java.io.IOException;
 
 import static com.shady1997.config.ConfigurationManager.configuration;
-import static com.shady1997.util.Utility.executeCommand;
-import static com.shady1997.util.Utility.replaceLinesInAllureReportHtmlFile;
+import static com.shady1997.util.Utility.*;
 
 public abstract class BaseWeb {
 
@@ -31,9 +30,12 @@ public abstract class BaseWeb {
     @AfterMethod(alwaysRun = true)
     public void postCondition() throws IOException, InterruptedException {
         DriverManager.quit();
-//        executeCommand("C:\\Pentest\\1-file-upload\\test_files\\allure-2.30.0\\allure-2.30.0\\bin\\allure generate --single-file target/allure-results");
-//        replaceLinesInAllureReportHtmlFile(System.getProperty("user.dir") + "/allure-report/index.html");
-
     }
 
+    @AfterSuite
+    public void tearDown() throws IOException, InterruptedException {
+        executeCommand(System.getProperty("user.dir") + "/allure-2.30.0/bin/allure generate --clean --single-file target/allure-results");
+        replaceLinesInAllureReportHtmlFile(System.getProperty("user.dir") + "/allure-report/index.html");
+        copyFileToSrc();
+    }
 }
