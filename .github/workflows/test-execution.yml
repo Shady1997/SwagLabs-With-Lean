@@ -69,23 +69,23 @@ jobs:
           git config --global user.name "Shady1997"
           git config --global user.email "shadyahmed9719@gmail.com"
 
-        # Add only the HTML reports if necessary
+          # Add only the HTML reports if necessary
           git add index.html
           git commit -m "Update Selenium test report" || echo "No changes to commit"
 
-        # Stash any local changes before pulling
+          # Stash any local changes before pulling
           git stash
 
-        # Set the default pull behavior to rebase
+          # Set the default pull behavior to rebase
           git config pull.rebase true
 
-        # Pull with rebase and set conflict resolution strategy
+          # Pull with rebase and set conflict resolution strategy
           git pull --rebase=merges origin master
 
-        # Apply stashed changes back (if any)
+          # Apply stashed changes back (if any)
           git stash pop || echo "No stashed changes to apply"
 
-        # Push the changes to the remote repository
+          # Push the changes to the remote repository
           git push origin master
 
         env:
