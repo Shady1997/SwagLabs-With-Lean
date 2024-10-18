@@ -54,6 +54,7 @@ jobs:
             mvn -B -q test -Pweb-execution -Dsuite=local -Dtarget=local -Dbrowser=safari
           else
             mvn -B -q test -Pweb-execution -Dsuite=local -Dtarget=local -Dheadless=true -Dbrowser=${{ matrix.browser }}
+          fi
 
 #name: Build and Test
 #on:
