@@ -78,17 +78,21 @@ jobs:
 
           # Add only the HTML reports if necessary
           git add index.html
-          git commit -m "Update Selenium test report"
+          git commit -m "Update Selenium test report" || echo "No changes to commit"
+
+          # Stash any local changes before pulling
+          git stash
 
           # Set the default pull behavior to rebase
           git config pull.rebase true
 
           # Pull with rebase and set conflict resolution strategy
-          git pull --rebase=merges origin master  
+          git pull --rebase=merges origin master
 
-          # commit changes of index file
-          # git add .
-          # git commit -m "update index file"
+          # Apply stashed changes back (if any)
+          git stash pop || echo "No stashed changes to apply"
+
+          # Push the changes to the remote repository
           git push origin master
 
         env:
