@@ -30,4 +30,4 @@ jobs:
         run: mvn -B -q -DskipTests package
 
       - name: Run local tests
-        run: mvn -B -q test -Pweb-execution -Dsuite=local -Dtarget=local -Dheadless=true -Dbrowser=safari
+        run: mvn -B -q test -Pweb-execution -Dsuite=local -Dtarget=local -Dheadless=false -Dbrowser=safari
